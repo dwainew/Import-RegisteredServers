@@ -12,8 +12,11 @@ begin {
     #Requires -module sqlserver    
     if (!$PathToSettingsFile) {
         Write-Verbose "No path specified, defaulting to current APPDATA environment variable..."
-        $PathToSettingsFile = ($env:APPDATA + "\sqlops\user\settings.json") 
-        Write-Verbose "Backing up existing settings file..."
+        $PathToSettingsFile = ($env:APPDATA + "\sqlops\user\settings.json")
+        if (!(Test-Path -Path $PathToSettingsFile)){
+        $PathToSettingsFile = ($env:APPDATA + "\azuredatastudio\user\settings.json")
+        }
+         Write-Verbose ("Backing up existing settings file: " + $PathToSettingsFile)
         Copy-Item -Path $PathToSettingsFile -Destination ($PathToSettingsFile + ".old")
         Write-Verbose "Path to settings = $PathToSettingsFile"
     }
